@@ -53,7 +53,6 @@ public class StationNameFragment extends Fragment implements IStationsChangeList
     public void change(boolean status) {
         if(status){
             adapter.notifyDataSetChanged();
-            Log.e("Appw","Nevek megjöttek");
         }else{
             Toast.makeText(getContext(),"Az állomás nevek lekérdezése nem sikerült!",Toast.LENGTH_SHORT).show();
             DataContainer.getInstance().clearStations();

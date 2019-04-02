@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements IViewPagerListene
 
     @Override
     public void change(boolean status) {
-        Log.e("Appw","Main "+status);
+        Log.e("Appw","Update "+status);
         if (status){
             pagerAdapter.notifyDataSetChanged();
         }

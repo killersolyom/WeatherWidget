@@ -84,7 +84,6 @@ public class StationValuesFragment extends Fragment implements IValuesChangeList
     public void change(boolean status) {
         if(status){
             try {
-                Log.e("Appw","Értékek megjöttek");
                 Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -108,8 +107,6 @@ public class StationValuesFragment extends Fragment implements IValuesChangeList
 
     @Override
     public void onRefresh() {
-        this.values.clear();
-        adapter.notifyDataSetChanged();
         Toast.makeText(getContext(),"Frisítés...",Toast.LENGTH_SHORT).show();
         mSwipeRefreshLayout.setRefreshing(false);
         DatabaseManager.getInstance().getValues();
