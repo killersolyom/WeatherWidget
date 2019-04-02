@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_locations"
+        android:icon="@drawable/locations"
+        android:title="@string/locationsFragment" />
+
+    <item
+        android:id="@+id/navigation_weather"
+        android:icon="@drawable/sun"
+        android:title="@string/weather" />
+
+    <item
+        android:id="@+id/navigation_refresh"
+        android:icon="@drawable/refresh"
+        android:title="@string/refresh" />
+
+
+
+
+</menu>
