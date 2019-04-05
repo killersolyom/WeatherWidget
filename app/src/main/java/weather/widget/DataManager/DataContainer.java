@@ -19,8 +19,10 @@ public class DataContainer {
     private String windSpeed = "0";
     private String windDirection = "0";
     ///Tárolók
+    private ArrayList values = new ArrayList<>();
     private ArrayList<String> stations = new ArrayList<>();
     private ArrayList<DataPoint> points = new ArrayList<>();
+    private String selectedFragment = "[WEATHER]";
     ///Külső tárhely
     private InternalStorageManager manager = new InternalStorageManager();
     ///Interface-k
@@ -61,6 +63,14 @@ public class DataContainer {
             return manager.readData();
         }
         return "none";
+    }
+
+    public String getSelectedFragment() {
+        return selectedFragment;
+    }
+
+    public void setSelectedFragment(String selectedFragment) {
+        this.selectedFragment = selectedFragment;
     }
 
     public String getTemperature() {
@@ -175,7 +185,7 @@ public class DataContainer {
     }
 
     public ArrayList<String> getAllValues(){
-        ArrayList values = new ArrayList<>();
+        values.clear();
         values.add(temperature);
         values.add(humidity);
         values.add(pressure);

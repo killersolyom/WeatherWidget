@@ -2,11 +2,11 @@ package weather.widget.ViewPager;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
 import java.util.ArrayList;
 
 
-public class SectionsPageAdapter extends FragmentStatePagerAdapter {
+public class SectionsPageAdapter extends FragmentPagerAdapter {
 
     private final ArrayList<Fragment> mFragmentList = new ArrayList<>();
 
@@ -22,6 +22,7 @@ public class SectionsPageAdapter extends FragmentStatePagerAdapter {
     public Fragment getItem(int position) {
         return mFragmentList.get(position);
     }
+
 
     @Override
     public int getCount() {

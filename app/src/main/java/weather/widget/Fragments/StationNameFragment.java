@@ -19,7 +19,7 @@ import weather.widget.R;
 import weather.widget.RecycleViewAdapters.StationNameAdapter;
 
 
-public class StationNameFragment extends Fragment implements IStationsChangeListener,SwipeRefreshLayout.OnRefreshListener {
+public class StationNameFragment extends Fragment implements IStationsChangeListener,SwipeRefreshLayout.OnRefreshListener{
 
     private RecyclerView recycle;
     private StationNameAdapter adapter;
@@ -39,6 +39,7 @@ public class StationNameFragment extends Fragment implements IStationsChangeList
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_station_names, container, false);
         DatabaseManager.getInstance().getStations();
+        DataContainer.getInstance().setSelectedFragment("[STATION]");
         Toast.makeText(this.getContext(),"Állomások keresése folyamatban...",Toast.LENGTH_LONG).show();
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_container_names);
         mSwipeRefreshLayout.setOnRefreshListener(this);
@@ -53,6 +54,7 @@ public class StationNameFragment extends Fragment implements IStationsChangeList
     public void change(boolean status) {
         if(status){
             adapter.notifyDataSetChanged();
+
         }else{
             Toast.makeText(getContext(),"Az állomás nevek lekérdezése nem sikerült!",Toast.LENGTH_SHORT).show();
             DataContainer.getInstance().clearStations();

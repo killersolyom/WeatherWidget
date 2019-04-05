@@ -8,6 +8,19 @@
     android:background="@drawable/background"
     tools:context="weather.widget.Main.MainActivity">
 
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        app:itemIconTint="@color/blue"
+        app:itemTextColor="@color/grey"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/navigation" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vcontainer"

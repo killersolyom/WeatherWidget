@@ -49,6 +49,7 @@ public class StationValuesFragment extends Fragment implements IValuesChangeList
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_station_values, container, false);
         DatabaseManager.getInstance().getValues();
+        DataContainer.getInstance().setSelectedFragment("[WEATHER]");
         mSwipeRefreshLayout = view.findViewById(R.id.swipe_container_values);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         recycle = view.findViewById(R.id.recycler_view_values_frame);

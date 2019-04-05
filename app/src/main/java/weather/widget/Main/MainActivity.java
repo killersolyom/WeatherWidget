@@ -5,11 +5,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
+import android.view.MenuItem;
 import android.widget.Toast;
 import java.util.Calendar;
 import weather.widget.DataManager.DataContainer;
@@ -28,6 +28,36 @@ public class MainActivity extends AppCompatActivity implements IViewPagerListene
     private ViewPager mViewPager;
     private SectionsPageAdapter pagerAdapter = new SectionsPageAdapter(getSupportFragmentManager());
 
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_locations:
+                    startNameFragment();
+                    return true;
+                case R.id.navigation_weather:
+                    startWeatherFragment();
+                    return true;
+                case R.id.navigation_refresh:
+                    if(DataContainer.getInstance().getSelectedFragment().equals("[WEATHER]")){
+                        if(DataContainer.getInstance().getStationName().equals("none")){
+                            DatabaseManager.getInstance().getStations();
+                            Toast.makeText(getApplicationContext(),"Kérem válasszon ki egy állomást!",Toast.LENGTH_LONG).show();
+                        }else {
+                            DatabaseManager.getInstance().getValues();
+                        }
+                    }else if(DataContainer.getInstance().getSelectedFragment().equals("[STATION]")){
+                        DatabaseManager.getInstance().getStations();
+                    }
+                    return true;
+            }
+            return false;
+        }
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements IViewPagerListene
         if(DataContainer.getInstance().getStationName().equals("none")){
             Toast.makeText(this,"Kérem válasszon ki egy állomást!",Toast.LENGTH_LONG).show();
         }
+        BottomNavigationView navigation = findViewById(R.id.navigation);
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mViewPager = findViewById(R.id.vcontainer);
         setupViewPager();
         startWeatherFragment();
@@ -63,6 +95,8 @@ public class MainActivity extends AppCompatActivity implements IViewPagerListene
         mViewPager.setCurrentItem(1);
     }
 
+    private void startNameFragment(){mViewPager.setCurrentItem(0);}
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -72,8 +106,7 @@ public class MainActivity extends AppCompatActivity implements IViewPagerListene
     public void change(boolean status) {
         Log.e("Appw","Update "+status);
         if (status){
-            pagerAdapter.notifyDataSetChanged();
+
         }
     }
-
 }
