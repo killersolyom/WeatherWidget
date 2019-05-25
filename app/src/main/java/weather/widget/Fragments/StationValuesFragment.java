@@ -29,13 +29,13 @@ import weather.widget.RecycleViewAdapters.StationValueAdapter;
 import weather.widget.Widget.WeatherWidget;
 
 
-public class StationValuesFragment extends Fragment implements IValuesChangeListener, IValueClickedListener, SwipeRefreshLayout.OnRefreshListener {
+public class StationValuesFragment extends Fragment implements IValuesChangeListener, IValueClickedListener , SwipeRefreshLayout.OnRefreshListener{
 
     private ArrayList<StationValues> values = new ArrayList<>();
     private RecyclerView recycle;
     private StationValueAdapter adapter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-
+    private ViewGroup container;
     public StationValuesFragment() {
     }
 
@@ -58,6 +58,7 @@ public class StationValuesFragment extends Fragment implements IValuesChangeList
         recycle.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recycle.setAdapter(adapter);
         getSelectedStationValues();
+        this.container = container;
         return view;
     }
 
@@ -74,11 +75,18 @@ public class StationValuesFragment extends Fragment implements IValuesChangeList
             values.add( new StationValues("Szélirány: " +value.get(5), ContextCompat.getDrawable(getContext(),R.drawable.direction)));
             values.add( new StationValues("Szélsebesség: " +value.get(6)+" Km/h", ContextCompat.getDrawable(getContext(),R.drawable.speed)));
             adapter.notifyDataSetChanged();
+            scroll();
         }catch (Exception ignored){
         }
 
     }
 
+    private void scroll(){
+        int x = recycle.getScrollX();
+        int y = recycle.getScrollY();
+        recycle.scrollTo(50,50);
+        recycle.scrollTo(x,y);
+    }
 
 
     @Override

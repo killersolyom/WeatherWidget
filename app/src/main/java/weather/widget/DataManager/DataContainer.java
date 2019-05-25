@@ -7,7 +7,6 @@ import weather.widget.Interfaces.IStationsChangeListener;
 import weather.widget.Interfaces.IUpdateListener;
 import weather.widget.Interfaces.IValuesChangeListener;
 import weather.widget.Interfaces.IValuesChangeListenerForService;
-import weather.widget.Interfaces.IViewPagerListener;
 
 public class DataContainer {
     ///Adat tagok
@@ -30,7 +29,6 @@ public class DataContainer {
     private IValuesChangeListener valueChangeListener;
     private IStationsChangeListener stationChangeListener;
     private IValuesChangeListenerForService serviceChangeListener;
-    private IViewPagerListener viewPagerListener;
 
     /// Grafikon frissitő interface
     public void setListener(IUpdateListener ch){
@@ -46,8 +44,6 @@ public class DataContainer {
     }
     ///Service-t értesítő interface
     public void setListener(IValuesChangeListenerForService ch){this.serviceChangeListener=ch;}
-    ///View pager-t értesítő interface
-    public void setListener(IViewPagerListener ch){this.viewPagerListener=ch;}
 
     private static final DataContainer ourInstance = new DataContainer();
     public static DataContainer getInstance() {
@@ -99,7 +95,6 @@ public class DataContainer {
         this.stations.clear();
         this.stations.addAll(st);
         stationChangeListener.change(true);
-        viewPagerListener.change(true);
     }
     public void clearStations(){
         this.stations.clear();
@@ -181,7 +176,6 @@ public class DataContainer {
     private void notifyDataChange(){
         valueChangeListener.change(true);
         serviceChangeListener.change(true);
-        viewPagerListener.change(true);
     }
 
     public ArrayList<String> getAllValues(){

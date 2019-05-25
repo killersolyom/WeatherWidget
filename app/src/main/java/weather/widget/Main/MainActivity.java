@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 import java.util.Calendar;
@@ -16,14 +15,14 @@ import weather.widget.DataManager.DataContainer;
 import weather.widget.Database.DatabaseManager;
 import weather.widget.Fragments.StationNameFragment;
 import weather.widget.Fragments.StationValuesFragment;
-import weather.widget.Interfaces.IViewPagerListener;
 import weather.widget.R;
 import weather.widget.Services.ValueUpdaterService;
 import weather.widget.ViewPager.SectionsPageAdapter;
 
 
 
-public class MainActivity extends AppCompatActivity implements IViewPagerListener{
+public class MainActivity extends AppCompatActivity {
+
 
     private ViewPager mViewPager;
     private SectionsPageAdapter pagerAdapter = new SectionsPageAdapter(getSupportFragmentManager());
@@ -72,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements IViewPagerListene
         setupViewPager();
         startWeatherFragment();
         startService();
-        DataContainer.getInstance().setListener(this);
     }
 
     private void setupViewPager() {
@@ -92,21 +90,15 @@ public class MainActivity extends AppCompatActivity implements IViewPagerListene
     }
 
     private void startWeatherFragment(){
-        mViewPager.setCurrentItem(1);
+        mViewPager.setCurrentItem(1,true);
     }
 
-    private void startNameFragment(){mViewPager.setCurrentItem(0);}
+    private void startNameFragment(){
+        mViewPager.setCurrentItem(0,true);
+    }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-    }
-
-    @Override
-    public void change(boolean status) {
-        Log.e("Appw","Update "+status);
-        if (status){
-
-        }
     }
 }

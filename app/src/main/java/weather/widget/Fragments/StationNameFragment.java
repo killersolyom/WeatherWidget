@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import java.util.Objects;
 import weather.widget.DataManager.DataContainer;
 import weather.widget.Database.DatabaseManager;
 import weather.widget.Interfaces.IStationsChangeListener;
@@ -19,7 +18,7 @@ import weather.widget.R;
 import weather.widget.RecycleViewAdapters.StationNameAdapter;
 
 
-public class StationNameFragment extends Fragment implements IStationsChangeListener,SwipeRefreshLayout.OnRefreshListener{
+public class StationNameFragment extends Fragment implements IStationsChangeListener, SwipeRefreshLayout.OnRefreshListener{
 
     private RecyclerView recycle;
     private StationNameAdapter adapter;
@@ -54,12 +53,19 @@ public class StationNameFragment extends Fragment implements IStationsChangeList
     public void change(boolean status) {
         if(status){
             adapter.notifyDataSetChanged();
-
+            scroll();
         }else{
             Toast.makeText(getContext(),"Az állomás nevek lekérdezése nem sikerült!",Toast.LENGTH_SHORT).show();
             DataContainer.getInstance().clearStations();
             adapter.notifyDataSetChanged();
         }
+    }
+
+    private void scroll(){
+        int x = recycle.getScrollX();
+        int y = recycle.getScrollY();
+        recycle.scrollTo(50,50);
+        recycle.scrollTo(x,y);
     }
 
     @Override
