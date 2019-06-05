@@ -46,6 +46,7 @@ public class GraphiconActivity extends AppCompatActivity implements IUpdateListe
         data = intent.getStringExtra("0");
         title = intent.getStringExtra("1");
         unit = intent.getStringExtra("2");
+        getData();
     }
 
 
@@ -57,7 +58,6 @@ public class GraphiconActivity extends AppCompatActivity implements IUpdateListe
         this.data = data;
         this.title = title;
         this.unit = unit;
-        DatabaseManager.getInstance().getValues(data);
     }
 
     public GraphiconActivity() {

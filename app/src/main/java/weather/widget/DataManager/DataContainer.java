@@ -18,7 +18,7 @@ public class DataContainer {
     private String windSpeed = "0";
     private String windDirection = "0";
     ///Tárolók
-    private ArrayList values = new ArrayList<>();
+    private ArrayList<String> values = new ArrayList<>();
     private ArrayList<String> stations = new ArrayList<>();
     private ArrayList<DataPoint> points = new ArrayList<>();
     private String selectedFragment = "[WEATHER]";

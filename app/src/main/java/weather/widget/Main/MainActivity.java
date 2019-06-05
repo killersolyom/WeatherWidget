@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         mViewPager.setAdapter(pagerAdapter);
     }
 
-    public void startService(){
+    private void startService(){
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.add(Calendar.SECOND, 1);

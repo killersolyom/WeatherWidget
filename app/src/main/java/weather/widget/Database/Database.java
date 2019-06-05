@@ -16,8 +16,9 @@ public class Database  {
 
 
     private static final String DEFAULT_DRIVER = "oracle.jdbc.driver.OracleDriver";
-    private static final String DEFAULT_URL = "jdbc:oracle:thin:@192.168.1.102:1521:XE";
-    //private static final String DEFAULT_URL = "jdbc:oracle:thin:@192.168.0.64:1521:XE";
+    //private static final String DEFAULT_URL = "jdbc:oracle:thin:@killersolyom.servegame.com:1521:XE";
+    //private static final String DEFAULT_URL = "jdbc:oracle:thin:@192.168.1.102:1521:XE";
+    private static final String DEFAULT_URL = "jdbc:oracle:thin:@192.168.0.64:1521:XE";
     private static String DEFAULT_USERNAME = "Weatherstation";
     private static String DEFAULT_PASSWORD = "sajt";
     private Connection connection = null;

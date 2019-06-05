@@ -22,8 +22,8 @@ public class Clock {
     public String getElapsedHoursInTimeStamp(){
         Date currentTime = Calendar.getInstance().getTime();
         Long time = ((System.currentTimeMillis()/1000) - ((currentTime.getHours() * 3600) +  (currentTime.getMinutes() * 60))) * 1000;
-       // return time.toString();
-        return "0";
+        return time.toString();
+        //return "0";
     }
     public int getCurrentTime(){
         return  Calendar.getInstance().getTime().getHours();
