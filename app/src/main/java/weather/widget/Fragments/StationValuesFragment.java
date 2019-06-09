@@ -1,23 +1,22 @@
 package weather.widget.Fragments;
 
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Objects;
-
+import jp.co.recruit_lifestyle.android.widget.WaveSwipeRefreshLayout;
 import weather.widget.Activities.GraphiconActivity;
 import weather.widget.Classes.StationValues;
 import weather.widget.DataManager.DataContainer;
@@ -29,13 +28,13 @@ import weather.widget.RecycleViewAdapters.StationValueAdapter;
 import weather.widget.Widget.WeatherWidget;
 
 
-public class StationValuesFragment extends Fragment implements IValuesChangeListener, IValueClickedListener , SwipeRefreshLayout.OnRefreshListener{
+public class StationValuesFragment extends Fragment implements IValuesChangeListener, IValueClickedListener{
 
     private ArrayList<StationValues> values = new ArrayList<>();
     private RecyclerView recycle;
     private StationValueAdapter adapter;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private ViewGroup container;
+    private WaveSwipeRefreshLayout waveSwipeRefreshLayout;
+
     public StationValuesFragment() {
     }
 
@@ -50,15 +49,22 @@ public class StationValuesFragment extends Fragment implements IValuesChangeList
         View view =  inflater.inflate(R.layout.fragment_station_values, container, false);
         DatabaseManager.getInstance().getValues();
         DataContainer.getInstance().setSelectedFragment("[WEATHER]");
-        mSwipeRefreshLayout = view.findViewById(R.id.swipe_container_values);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
+        waveSwipeRefreshLayout = view.findViewById(R.id.swipe_container_values);
+        waveSwipeRefreshLayout.setWaveColor(Color.parseColor("#C60AF5F5"));
+        waveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
+            @Override public void onRefresh() {
+                DatabaseManager.getInstance().getValues();
+                Toast.makeText(getContext(),"Frisítés...",Toast.LENGTH_SHORT).show();
+                stopRefreshingAfterDelay();
+            }
+        });
+        getSelectedStationValues();
         recycle = view.findViewById(R.id.recycler_view_values_frame);
         adapter = new StationValueAdapter(this.getContext(),values);
         adapter.setListener(this);
         recycle.setLayoutManager(new LinearLayoutManager(this.getContext()));
         recycle.setAdapter(adapter);
         getSelectedStationValues();
-        this.container = container;
         return view;
     }
 
@@ -66,6 +72,7 @@ public class StationValuesFragment extends Fragment implements IValuesChangeList
     public void getSelectedStationValues(){
         try {
             values.clear();
+            adapter.notifyDataSetChanged();
             ArrayList<String> value = DataContainer.getInstance().getAllValues();
             values.add( new StationValues("Hőmérséklet: " +value.get(0)+"°C", ContextCompat.getDrawable(getContext(),R.drawable.temperature)));
             values.add( new StationValues("Páratartalom: " +value.get(1)+"%", ContextCompat.getDrawable(getContext(),R.drawable.humidity)));
@@ -75,19 +82,10 @@ public class StationValuesFragment extends Fragment implements IValuesChangeList
             values.add( new StationValues("Szélirány: " +value.get(5), ContextCompat.getDrawable(getContext(),R.drawable.direction)));
             values.add( new StationValues("Szélsebesség: " +value.get(6)+" Km/h", ContextCompat.getDrawable(getContext(),R.drawable.speed)));
             adapter.notifyDataSetChanged();
-            scroll();
         }catch (Exception ignored){
         }
 
     }
-
-    private void scroll(){
-        int x = recycle.getScrollX();
-        int y = recycle.getScrollY();
-        recycle.scrollTo(50,50);
-        recycle.scrollTo(x,y);
-    }
-
 
     @Override
     public void change(boolean status) {
@@ -99,6 +97,8 @@ public class StationValuesFragment extends Fragment implements IValuesChangeList
                         getSelectedStationValues();
                     }
                 });
+                recycle.smoothScrollBy(0,-1);
+                waveSwipeRefreshLayout.setRefreshing(false);
             }catch (Exception ignored){
             }
             try {
@@ -113,14 +113,6 @@ public class StationValuesFragment extends Fragment implements IValuesChangeList
             Toast.makeText(getContext(),"Az állomás értékek lekérdezése nem sikerült!",Toast.LENGTH_SHORT).show();
         }
     }
-
-    @Override
-    public void onRefresh() {
-        Toast.makeText(getContext(),"Frisítés...",Toast.LENGTH_SHORT).show();
-        mSwipeRefreshLayout.setRefreshing(false);
-        DatabaseManager.getInstance().getValues();
-    }
-
 
     @Override
     public void clicked(int index) {
@@ -153,11 +145,16 @@ public class StationValuesFragment extends Fragment implements IValuesChangeList
         }catch (Exception ignored){
             Toast.makeText(getContext(),"Nem sikerült betölteni a grafikont!",Toast.LENGTH_SHORT).show();
         }
-
     }
 
 
-
+    private void stopRefreshingAfterDelay(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                waveSwipeRefreshLayout.setRefreshing(false);
+            }}, 2000);
+    }
 
 
 

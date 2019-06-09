@@ -72,15 +72,24 @@ public class WeatherWidget extends AppWidgetProvider{
 
     private static void update(Context context){
         RemoteViews remoteViews = new RemoteViews(context.getPackageName(),R.layout.weather_widget);
-        if(Double.parseDouble(DataContainer.getInstance().getWindSpeed()) > 85){
+        if(Double.parseDouble(DataContainer.getInstance().getWindSpeed()) >= 85){
             remoteViews.setImageViewResource(R.id.widgetLogo, R.drawable.tornado);
            try {
-               createTornadoNotification("Ön veszélyben van!", "A környéken tornádó van! Meneküljön!", ContextCompat.getDrawable(getApplicationUsingReflection().getApplicationContext(),R.drawable.tornado));
+               createNotification("Ön veszélyben van!", "A környéken tornádó van! Meneküljön!",
+                       ContextCompat.getDrawable(getApplicationUsingReflection().getApplicationContext(),R.drawable.tornado));
            }catch (Exception ignored){}
-        }else if(Double.parseDouble(DataContainer.getInstance().getUvLevel()) > 8){
+        }else if(Double.parseDouble(DataContainer.getInstance().getUvLevel()) >= 8){
             remoteViews.setImageViewResource(R.id.widgetLogo, R.drawable.uv);
             try {
-                createTornadoNotification("Legyen óvatos!", "Az Uv Index veszélyesen magas!", ContextCompat.getDrawable(getApplicationUsingReflection().getApplicationContext(),R.drawable.dangerousuv));
+                createNotification("Legyen óvatos!", "Az Uv Index veszélyesen magas!",
+                        ContextCompat.getDrawable(getApplicationUsingReflection().getApplicationContext(),R.drawable.dangerousuv));
+            }catch (Exception ignored){}
+        }else if(Double.parseDouble(DataContainer.getInstance().getTemperature()) >= 35){
+            remoteViews.setImageViewResource(R.id.widgetLogo, R.drawable.dangerousuv);
+            try {
+                createNotification("Legyen óvatos!", "A hőmérséklet veszélyesen magas! " +
+                        DataContainer.getInstance().getTemperature() + " °C",
+                        ContextCompat.getDrawable(getApplicationUsingReflection().getApplicationContext(),R.drawable.sunimage));
             }catch (Exception ignored){}
         }else if(isNight()){
             if(Double.parseDouble(DataContainer.getInstance().getTemperature()) <= 0){
@@ -128,7 +137,7 @@ public class WeatherWidget extends AppWidgetProvider{
         AppWidgetManager.getInstance(context).updateAppWidget(new ComponentName(context, WeatherWidget.class), remoteViews);
     }
 
-    private static void createTornadoNotification(String title,String message, Drawable image){
+    private static void createNotification(String title,String message, Drawable image){
         try {
             NotificationCreater notificationCreater = new NotificationCreater(getApplicationUsingReflection().getBaseContext(),image);
             Notification.Builder notify = notificationCreater.getChannelNotification(title,message);

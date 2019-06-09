@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -61,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        DatabaseManager.getInstance().getStations();
         if(DataContainer.getInstance().getStationName().equals("none")){
             Toast.makeText(this,"Kérem válasszon ki egy állomást!",Toast.LENGTH_LONG).show();
         }
@@ -71,12 +71,30 @@ public class MainActivity extends AppCompatActivity {
         setupViewPager();
         startWeatherFragment();
         startService();
+        makeStationQuerryWithDelay();
+        makeValueQuerryWithDelay();
     }
 
     private void setupViewPager() {
         pagerAdapter.addFragment(new StationNameFragment());
         pagerAdapter.addFragment(new StationValuesFragment());
         mViewPager.setAdapter(pagerAdapter);
+    }
+
+    private void makeStationQuerryWithDelay(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                DatabaseManager.getInstance().getStations();
+            }}, 1200);
+    }
+
+    private void makeValueQuerryWithDelay(){
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                DatabaseManager.getInstance().getValues();
+            }}, 1000);
     }
 
     private void startService(){

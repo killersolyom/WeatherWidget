@@ -30,4 +30,5 @@ dependencies {
     implementation files('libs/ojdbc14.jar')
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.jjoe64:graphview:4.2.2'
+    implementation 'com.github.recruit-lifestyle:WaveSwipeRefreshLayout:1.6'
 }
