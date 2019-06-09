@@ -21,7 +21,6 @@ public class DataContainer {
     private ArrayList<String> values = new ArrayList<>();
     private ArrayList<String> stations = new ArrayList<>();
     private ArrayList<DataPoint> points = new ArrayList<>();
-    private String selectedFragment = "[WEATHER]";
     ///Külső tárhely
     private InternalStorageManager manager = new InternalStorageManager();
     ///Interface-k
@@ -59,14 +58,6 @@ public class DataContainer {
             return manager.readData();
         }
         return "none";
-    }
-
-    public String getSelectedFragment() {
-        return selectedFragment;
-    }
-
-    public void setSelectedFragment(String selectedFragment) {
-        this.selectedFragment = selectedFragment;
     }
 
     public String getTemperature() {

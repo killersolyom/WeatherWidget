@@ -10,6 +10,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
+import android.support.v4.app.NotificationCompat;
+
 import weather.widget.R;
 
 public class NotificationCreater extends ContextWrapper {
@@ -17,15 +19,19 @@ public class NotificationCreater extends ContextWrapper {
     private final String CHANNEL_ID = "weather.widget.Classes";
     private final String CHANNEL_NAME = "NAME";
     private NotificationManager manager;
+    private Context context;
     private Drawable image;
 
     public NotificationCreater(Context base, Drawable image){
         super(base);
+        this.image = image;
+        this.context = base;
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             createChannels();
-            this.image = image;
         }
     }
+
 
     private void createChannels() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -36,7 +42,6 @@ public class NotificationCreater extends ContextWrapper {
             channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
             getManager().createNotificationChannel(channel);
         }
-
     }
 
     public NotificationManager getManager() {
@@ -54,6 +59,18 @@ public class NotificationCreater extends ContextWrapper {
                     .setSmallIcon(R.drawable.appicon)
                     .setLargeIcon(Icon.createWithBitmap(((BitmapDrawable)image).getBitmap()))
                     .setAutoCancel(true);
+        }else{
+            Bitmap bitmapImage = (((BitmapDrawable)image).getBitmap());
+            NotificationCompat.Builder b = new NotificationCompat.Builder(this.context);
+            b.setAutoCancel(true)
+                    .setDefaults(NotificationCompat.DEFAULT_ALL)
+                    .setWhen(System.currentTimeMillis())
+                    .setSmallIcon(R.drawable.appicon)
+                    .setTicker(message)
+                    .setContentTitle(title)
+                    .setContentText(message).setLargeIcon(bitmapImage);
+            NotificationManager nm = (NotificationManager) this.context.getSystemService(Context.NOTIFICATION_SERVICE);
+            nm.notify(1, b.build());
         }
         return null;
     }

@@ -40,9 +40,7 @@ public class StationNameFragment extends Fragment implements IStationsChangeList
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_station_names, container, false);
         DatabaseManager.getInstance().getStations();
-
-        DataContainer.getInstance().setSelectedFragment("[STATION]");
-        Toast.makeText(this.getContext(),"Állomások keresése folyamatban...",Toast.LENGTH_LONG).show();
+        //Toast.makeText(this.getContext(),"Állomások keresése folyamatban...",Toast.LENGTH_LONG).show();
         waveSwipeRefreshLayout = view.findViewById(R.id.swipe_container_names);
         waveSwipeRefreshLayout.setWaveColor(Color.parseColor("#C60AF5F5"));
         waveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {

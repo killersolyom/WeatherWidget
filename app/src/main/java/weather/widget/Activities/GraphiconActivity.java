@@ -38,6 +38,7 @@ public class GraphiconActivity extends AppCompatActivity implements IUpdateListe
         refreshButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(getApplicationContext(),"Frissítés...",Toast.LENGTH_SHORT).show();
                 getData();
             }
         });
@@ -52,7 +53,6 @@ public class GraphiconActivity extends AppCompatActivity implements IUpdateListe
 
     private void getData(){
         DatabaseManager.getInstance().getValues(data);
-        Toast.makeText(getApplicationContext(),"Frissítés...",Toast.LENGTH_SHORT).show();
     }
     public GraphiconActivity(String data, String title, String unit) {
         this.data = data;
@@ -67,33 +67,39 @@ public class GraphiconActivity extends AppCompatActivity implements IUpdateListe
     @Override
     public void newValue(boolean value) {
         if(value){
-            if(DataContainer.getInstance().getPointsSize() != 0){
+            if(DataContainer.getInstance().getPointsSize() > 0){
                 try {
                     series = new LineGraphSeries<>(DataContainer.getInstance().getPoints().toArray(new DataPoint[DataContainer.getInstance().getPointsSize()]));
                     draw();
                 }catch (Exception e){
                     Toast.makeText(this,"Nem sikerült az adat ábrázolás!",Toast.LENGTH_SHORT).show();
                 }
-
+            }else{
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),"Nincs megjeleníthető adat!",Toast.LENGTH_LONG).show();
+                    }
+                });
             }
-
         }
     }
 
     private void draw(){
-        GridLabelRenderer gridLabel = graphicon.getGridLabelRenderer();
-        gridLabel.setHorizontalAxisTitle("Idő (t)");
-        gridLabel.setVerticalAxisTitle(title +" (" +unit+")" );
-        StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphicon);
-        staticLabelsFormatter.setHorizontalLabels(Clock.getInstance().genetateTimeScale());
-        graphicon.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
-        graphicon.setTitleTextSize(70);
-        graphicon.setTitleColor(Color.WHITE);
-        series.setColor(Color.RED);
-        series.setAnimated(true);
-        series.setThickness(9);
-        graphicon.addSeries(series);
-        graphicon.getViewport().setScalable(true);
-        graphicon.getViewport().setScrollable(true);
+            GridLabelRenderer gridLabel = graphicon.getGridLabelRenderer();
+            gridLabel.setHorizontalAxisTitle("Idő (t)");
+            gridLabel.setVerticalAxisTitle(title +" (" +unit+")" );
+            StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphicon);
+            staticLabelsFormatter.setHorizontalLabels(Clock.getInstance().genetateTimeScale());
+            graphicon.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+            graphicon.setTitleTextSize(70);
+            graphicon.setTitleColor(Color.WHITE);
+            series.setColor(Color.RED);
+            series.setAnimated(true);
+            series.setThickness(9);
+            graphicon.addSeries(series);
+            graphicon.getViewport().setScalable(true);
+            graphicon.getViewport().setScrollable(true);
+
     }
 }

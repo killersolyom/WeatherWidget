@@ -3,9 +3,16 @@ package weather.widget.Database;
 import android.util.Log;
 
 import weather.widget.DataManager.DataContainer;
+import weather.widget.Interfaces.IErrorEventListener;
 
 
 public class DatabaseManager  {
+
+    private IErrorEventListener errorEventListener;
+    public void setListener(IErrorEventListener err){
+        this.errorEventListener = err;
+    }
+
     private static final DatabaseManager ourInstance = new DatabaseManager();
     private Database database = new Database();
     public static DatabaseManager getInstance() {
@@ -16,27 +23,31 @@ public class DatabaseManager  {
 
     }
 
-
-
-
     public void getValues(){
             Thread valueQueryThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
                     try  {
+                        String error = "";
                         for(int i = 0; i < 5; i++){
                             if(database.connect()){
                                 Thread.sleep(5);
                                     if(!database.getData()){
                                         Log.e("Appw","Nem sikerült az adatlekérdezés! " + i);
                                         Thread.sleep(1000);
+                                    }else {
+                                        error = "";
                                     }
                                     database.disconnect();
                                     break;
                             }else{
+                                error = "Nem sikerült a kapcsolódás az adatbázishoz!";
                                 Log.e("Appw","Nem sikerült a kapcsolódás az adatbázishoz!");
                                 database.disconnect();}
                             }
+                        if (!error.equals("")){
+                            errorEventListener.errorEvent(error);
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
