@@ -12,7 +12,6 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 import java.util.Calendar;
@@ -20,14 +19,13 @@ import weather.widget.DataManager.DataContainer;
 import weather.widget.Database.DatabaseManager;
 import weather.widget.Fragments.StationNameFragment;
 import weather.widget.Fragments.StationValuesFragment;
-import weather.widget.Interfaces.IErrorEventListener;
 import weather.widget.R;
 import weather.widget.Services.ValueUpdaterService;
 import weather.widget.ViewPager.SectionsPageAdapter;
 
 
 
-public class MainActivity extends AppCompatActivity implements IErrorEventListener {
+public class MainActivity extends AppCompatActivity{
 
 
     private ViewPager mViewPager;
@@ -79,19 +77,20 @@ public class MainActivity extends AppCompatActivity implements IErrorEventListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestPermissions();
-        DatabaseManager.getInstance().setListener(this);
         setContentView(R.layout.activity_main);
-        if(DataContainer.getInstance().getStationName().equals("none")){
-            Toast.makeText(this,"Kérem válasszon ki egy állomást!",Toast.LENGTH_LONG).show();
-        }
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mViewPager = findViewById(R.id.vcontainer);
         setupViewPager();
-        startWeatherFragment();
         startService();
         makeStationQuerryWithDelay();
         makeValueQuerryWithDelay();
+        if(DataContainer.getInstance().getStationName().equals("none")){
+            Toast.makeText(this,"Kérem válasszon ki egy állomást!",Toast.LENGTH_LONG).show();
+            startNameFragment();
+        }else{
+            startWeatherFragment();
+        }
     }
 
     private void setupViewPager() {
@@ -105,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements IErrorEventListen
             @Override
             public void run() {
                 DatabaseManager.getInstance().getStations();
-            }}, 800);
+            }}, 200);
     }
 
     private void makeValueQuerryWithDelay(){
@@ -139,8 +138,4 @@ public class MainActivity extends AppCompatActivity implements IErrorEventListen
         super.onDestroy();
     }
 
-    @Override
-    public void errorEvent(String message) {
-        Toast.makeText(getApplicationContext(),message,Toast.LENGTH_SHORT).show();
-    }
 }

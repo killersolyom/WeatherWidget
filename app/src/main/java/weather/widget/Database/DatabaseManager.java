@@ -1,17 +1,17 @@
 package weather.widget.Database;
 
+import android.app.Application;
+import android.app.Notification;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import weather.widget.Classes.NotificationCreater;
 import weather.widget.DataManager.DataContainer;
-import weather.widget.Interfaces.IErrorEventListener;
+import weather.widget.R;
 
 
 public class DatabaseManager  {
-
-    private IErrorEventListener errorEventListener;
-    public void setListener(IErrorEventListener err){
-        this.errorEventListener = err;
-    }
 
     private static final DatabaseManager ourInstance = new DatabaseManager();
     private Database database = new Database();
@@ -21,6 +21,22 @@ public class DatabaseManager  {
 
     private DatabaseManager() {
 
+    }
+
+    private static void createNotification(String message){
+        try {
+            NotificationCreater notificationCreater =
+                    new NotificationCreater(getApplicationUsingReflection().getBaseContext(),
+                            ContextCompat.getDrawable(getApplicationUsingReflection().getApplicationContext(),
+                            R.drawable.appicon),false);
+            Notification.Builder notify = notificationCreater.getChannelNotification("Hiba történt",message);
+            notificationCreater.getManager().notify(0,notify.build());
+        }catch (Exception ignored){
+        }
+    }
+
+    private static Application getApplicationUsingReflection() throws Exception {
+        return (Application) Class.forName("android.app.AppGlobals").getMethod("getInitialApplication").invoke(null, (Object[]) null);
     }
 
     public void getValues(){
@@ -41,13 +57,10 @@ public class DatabaseManager  {
                                     database.disconnect();
                                     break;
                             }else{
-                                error = "Nem sikerült a kapcsolódás az adatbázishoz!";
+                                //createNotification("Nem sikerült a kapcsolódás az adatbázishoz!");
                                 Log.e("Appw","Nem sikerült a kapcsolódás az adatbázishoz!");
                                 database.disconnect();}
                             }
-                        if (!error.equals("")){
-                            errorEventListener.errorEvent(error);
-                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

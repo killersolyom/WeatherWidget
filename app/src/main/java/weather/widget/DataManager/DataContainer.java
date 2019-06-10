@@ -1,5 +1,7 @@
 package weather.widget.DataManager;
 
+import android.util.Log;
+
 import com.jjoe64.graphview.series.DataPoint;
 import java.util.ArrayList;
 
@@ -9,20 +11,15 @@ import weather.widget.Interfaces.IValuesChangeListener;
 import weather.widget.Interfaces.IValuesChangeListenerForService;
 
 public class DataContainer {
-    ///Adat tagok
-    private String temperature = "0";
-    private String humidity = "0";
-    private String pressure = "0";
-    private String uvLevel = "0";
-    private String rainlevel = "0";
-    private String windSpeed = "0";
-    private String windDirection = "0";
+
     ///Tárolók
     private ArrayList<String> values = new ArrayList<>();
     private ArrayList<String> stations = new ArrayList<>();
     private ArrayList<DataPoint> points = new ArrayList<>();
+
     ///Külső tárhely
-    private InternalStorageManager manager = new InternalStorageManager();
+    private StorageManager manager = new StorageManager();
+
     ///Interface-k
     private IUpdateListener updateListener;
     private IValuesChangeListener valueChangeListener;
@@ -54,30 +51,71 @@ public class DataContainer {
 
 
     public String getStationName() {
-        if(manager.isExist()){
-            return manager.readData();
+        if(manager.isExistData("sName")){
+            return manager.readData("sName");
         }
         return "none";
     }
 
     public String getTemperature() {
-        return temperature;
+        if (manager.isExistData("sTemperature")){
+            return manager.readData("sTemperature");
+        }
+        return "0";
     }
 
     public String getHumidity() {
-        return humidity;
+        if (manager.isExistData("sHumidity")){
+            return manager.readData("sHumidity");
+        }
+        return "0";
     }
 
     public String getRainlevel() {
-        return rainlevel;
+        if (manager.isExistData("sRainLevel")){
+            return manager.readData("sRainLevel");
+        }
+        return "0";
     }
 
     public String getUvLevel() {
-        return uvLevel;
+        if (manager.isExistData("sUvLevel")){
+            return manager.readData("sUvLevel");
+        }
+        return "0";
     }
 
     public String getWindSpeed() {
-        return windSpeed;
+        if (manager.isExistData("sWindSpeed")){
+            return manager.readData("sWindSpeed");
+        }
+        return "0";
+    }
+
+    public String getWindDirection() {
+        if (manager.isExistData("sWindDirection")){
+            return manager.readData("sWindDirection");
+        }
+        return "0";
+    }
+
+    public String getPressure() {
+        if (manager.isExistData("sPressure")){
+            return manager.readData("sPressure");
+        }
+        return "0";
+    }
+
+    public ArrayList<String> getAllValues(){
+        values.clear();
+        values.add(getTemperature());
+        values.add(getHumidity());
+        values.add(getPressure());
+        values.add(getRainlevel());
+        values.add(getUvLevel());
+        values.add(getWindDirection());
+        values.add(getWindSpeed());
+        return values;
     }
 
     public ArrayList<String> getStations() { return stations; }
@@ -87,22 +125,38 @@ public class DataContainer {
         this.stations.addAll(st);
         stationChangeListener.change(true);
     }
-    public void clearStations(){
-        this.stations.clear();
+
+    public void setStationName(String value) {
+        manager.writeData(value,"sName");
     }
 
-    public void setStationName(String stationName) {
-        manager.writeData(stationName);
+    private void setWindDirection(String value) {
+        manager.writeData(value,"sWindDirection");
     }
 
-    public void setAllValue(String value){
-        temperature = value;
-        humidity = value;
-        pressure = value;
-        uvLevel = value;
-        rainlevel = value;
-        windSpeed = value;
-        windDirection = "Nincs";
+    private void setTemperature(String value) {
+        manager.writeData(value,"sTemperature");
+    }
+
+    private void setHumidity(String value) {
+        manager.writeData(value,"sHumidity");
+
+    }
+
+    private void setRainLevel(String value) {
+        manager.writeData(value,"sRainLevel");
+    }
+
+    private void setUvLevel(String value) {
+        manager.writeData(value,"sUvLevel");
+    }
+
+    private void setWindSpeed(String value) {
+        manager.writeData(value,"sWindSpeed");
+    }
+
+    private void setPressure(String value) {
+        manager.writeData(value,"sPressure");
     }
 
     public ArrayList<DataPoint> getPoints() {
@@ -121,19 +175,15 @@ public class DataContainer {
       return points.size();
     }
 
-    public void clearPoints(){
-        points.clear();
-        updateListener.newValue(true);
-    }
 
-    public void setAllValues(String temp, String hum, String pres, String uv, String rain, String windsp, String winddir){
-        temperature = temp;
-        humidity = hum;
-        pressure = pres;
-        uvLevel = uv;
-        rainlevel = rain;
-        windSpeed = windsp;
-        windDirection = convertPositionToDirection(winddir);
+    public void setAllValues(String temp, String hum, String press, String uv, String rain, String wSpeed, String wDirection){
+        setTemperature(temp);
+        setHumidity(hum);
+        setPressure(press);
+        setUvLevel(uv);
+        setRainLevel(rain);
+        setWindSpeed(wSpeed);
+        setWindDirection(convertPositionToDirection(wDirection));
         notifyDataChange();
     }
 
@@ -164,20 +214,18 @@ public class DataContainer {
         }
     }
 
+    public void clearStations(){
+        this.stations.clear();
+    }
+
+    public void clearPoints(){
+        points.clear();
+        updateListener.newValue(true);
+    }
+
     private void notifyDataChange(){
         valueChangeListener.change(true);
         serviceChangeListener.change(true);
     }
 
-    public ArrayList<String> getAllValues(){
-        values.clear();
-        values.add(temperature);
-        values.add(humidity);
-        values.add(pressure);
-        values.add(rainlevel);
-        values.add(uvLevel);
-        values.add(windDirection);
-        values.add(windSpeed);
-        return values;
-    }
 }

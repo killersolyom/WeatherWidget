@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import weather.widget.R;
 
@@ -22,23 +23,22 @@ public class NotificationCreater extends ContextWrapper {
     private Context context;
     private Drawable image;
 
-    public NotificationCreater(Context base, Drawable image){
+    public NotificationCreater(Context base, Drawable image, boolean vibration){
         super(base);
         this.image = image;
         this.context = base;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            createChannels();
+            createChannels(vibration);
         }
     }
 
 
-    private void createChannels() {
+    private void createChannels(boolean vibration) {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID,CHANNEL_NAME, NotificationManager.IMPORTANCE_DEFAULT);
             channel.enableLights(true);
-            channel.enableVibration(true);
-            channel.enableLights(true);
+            channel.enableVibration(vibration);
             channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
             getManager().createNotificationChannel(channel);
         }

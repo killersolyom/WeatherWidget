@@ -139,7 +139,7 @@ public class WeatherWidget extends AppWidgetProvider{
 
     private static void createNotification(String title,String message, Drawable image){
         try {
-            NotificationCreater notificationCreater = new NotificationCreater(getApplicationUsingReflection().getBaseContext(),image);
+            NotificationCreater notificationCreater = new NotificationCreater(getApplicationUsingReflection().getBaseContext(),image,true);
             Notification.Builder notify = notificationCreater.getChannelNotification(title,message);
             notificationCreater.getManager().notify(0,notify.build());
         }catch (Exception ignored){

@@ -8,12 +8,12 @@ import java.io.FileReader;
 import java.io.FileWriter;
 
 
-public class InternalStorageManager {
+public class StorageManager {
 
     private SharedPreferences preference;
     SharedPreferences.Editor editor;
 
-    public InternalStorageManager() {
+    public StorageManager() {
         try {
             preference = getApplicationUsingReflection().getApplicationContext().getSharedPreferences("WeatherWidget", 0);
             editor = preference.edit();
@@ -23,19 +23,18 @@ public class InternalStorageManager {
     }
 
 
-    public void writeData(String stationName){
-        editor.putString("sName",stationName);
+    public void writeData(String value, String key){
+        editor.putString(key,value);
         editor.commit();
     }
 
-    public String readData() {
-        return preference.getString("sName", "");
+    public String readData(String key) {
+        return preference.getString(key, "");
     }
 
-    public boolean isExist(){
-        return !preference.getString("sName", "").equals("");
+    public boolean isExistData(String key){
+        return !preference.getString(key, "").equals("");
     }
-
 
     private static Application getApplicationUsingReflection() throws Exception {
         return (Application) Class.forName("android.app.AppGlobals").getMethod("getInitialApplication").invoke(null, (Object[]) null);

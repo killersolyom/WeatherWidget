@@ -40,7 +40,6 @@ public class StationNameFragment extends Fragment implements IStationsChangeList
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_station_names, container, false);
         DatabaseManager.getInstance().getStations();
-        //Toast.makeText(this.getContext(),"Állomások keresése folyamatban...",Toast.LENGTH_LONG).show();
         waveSwipeRefreshLayout = view.findViewById(R.id.swipe_container_names);
         waveSwipeRefreshLayout.setWaveColor(Color.parseColor("#C60AF5F5"));
         waveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
@@ -60,8 +59,8 @@ public class StationNameFragment extends Fragment implements IStationsChangeList
     @Override
     public void change(boolean status) {
         if(status){
+            recycle.smoothScrollBy(0,-50);
             adapter.notifyDataSetChanged();
-            recycle.smoothScrollBy(0,-1);
             waveSwipeRefreshLayout.setRefreshing(false);
         }else{
             Toast.makeText(getContext(),"Az állomás nevek lekérdezése nem sikerült!",Toast.LENGTH_SHORT).show();

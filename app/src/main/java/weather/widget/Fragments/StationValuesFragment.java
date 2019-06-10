@@ -47,7 +47,6 @@ public class StationValuesFragment extends Fragment implements IValuesChangeList
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_station_values, container, false);
-        DatabaseManager.getInstance().getValues();
         waveSwipeRefreshLayout = view.findViewById(R.id.swipe_container_values);
         waveSwipeRefreshLayout.setWaveColor(Color.parseColor("#C60AF5F5"));
         waveSwipeRefreshLayout.setOnRefreshListener(new WaveSwipeRefreshLayout.OnRefreshListener() {
@@ -89,6 +88,7 @@ public class StationValuesFragment extends Fragment implements IValuesChangeList
     @Override
     public void change(boolean status) {
         if(status){
+            recycle.smoothScrollBy(0,-1);
             try {
                 Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
                     @Override
@@ -96,7 +96,6 @@ public class StationValuesFragment extends Fragment implements IValuesChangeList
                         getSelectedStationValues();
                     }
                 });
-                recycle.smoothScrollBy(0,-1);
                 waveSwipeRefreshLayout.setRefreshing(false);
             }catch (Exception ignored){
             }

@@ -61,7 +61,7 @@ public class Database  {
         try {
             int id = getLastId();
             if(id == -1){
-                DataContainer.getInstance().setAllValue("0");
+                //DataContainer.getInstance().setAllValue("0");
                 Log.e("query","no id found");
                 return false;
             }
@@ -71,7 +71,7 @@ public class Database  {
             DataContainer.getInstance().setAllValues(rs.getString("TEMPERATURE"), rs.getString("HUMIDITY"), rs.getString("PRESSURE"), rs.getString("UV_INDEX"), rs.getString("RAIN_LEVEL"), rs.getString("WIND_SPEED"), rs.getString("WIND_DIRECTION"));
             return true;
         } catch (SQLException e) {
-            DataContainer.getInstance().setAllValue("0");
+            //DataContainer.getInstance().setAllValue("0");
             return false;
         }
     }
