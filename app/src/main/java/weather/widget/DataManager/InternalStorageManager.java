@@ -1,6 +1,8 @@
 package weather.widget.DataManager;
 
 import android.app.Application;
+import android.content.SharedPreferences;
+
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -8,67 +10,30 @@ import java.io.FileWriter;
 
 public class InternalStorageManager {
 
+    private SharedPreferences preference;
+    SharedPreferences.Editor editor;
+
     public InternalStorageManager() {
-    }
-
-
-    public void writeData(String data){
-        File file = null;
         try {
-            file = new File(getApplicationUsingReflection().getApplicationContext().getFilesDir(),"widgetData");
-            if(!file.exists()){
-                file.mkdir();
-            }try{
-                File gpxfile = new File(file, "widgetData");
-                FileWriter writer = new FileWriter(gpxfile);
-                writer.write(data);
-                writer.flush();
-                writer.close();
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+            preference = getApplicationUsingReflection().getApplicationContext().getSharedPreferences("WeatherWidget", 0);
+            editor = preference.edit();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+
+    public void writeData(String stationName){
+        editor.putString("sName",stationName);
+        editor.commit();
+    }
+
     public String readData() {
-        try {
-            File file = new File(getApplicationUsingReflection().getApplicationContext().getFilesDir(),"widgetData");
-            File gpxfile = new File(file, "widgetData");
-            FileReader reader = new FileReader(gpxfile);
-            char [] array = new char[35];
-            for(int i = 0; i < array.length; i++){
-                array[i] = '*';
-            }
-            reader.read(array);
-            reader.close();
-            String returnvalue = "";
-            for(int i = 0; i < array.length; i++){
-                if(array[i] == '*'){
-                    break;
-                }else{
-                    returnvalue += array[i];
-                }
-            }
-            return returnvalue;
-        } catch (Exception e) {
-            return "NO FILE";
-        }
+        return preference.getString("sName", "");
     }
 
     public boolean isExist(){
-        try{
-            File file = new File(getApplicationUsingReflection().getApplicationContext().getFilesDir(),"widgetData");
-            if(!file.exists()){
-                return false;
-            }else {
-                return true;
-            }
-        }catch (Exception e){
-            return false;
-        }
-
+        return !preference.getString("sName", "").equals("");
     }
 
 
