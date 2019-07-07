@@ -93,6 +93,16 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+    private void startService(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.add(Calendar.SECOND, 1);
+        Intent intent = new Intent(getApplicationContext(), ValueUpdaterService.class);
+        PendingIntent pintent = PendingIntent.getService(getApplicationContext(), 0, intent, 0);
+        AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarm.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 5*60000, pintent);
+    }
+
     private void setupViewPager() {
         pagerAdapter.addFragment(new StationNameFragment());
         pagerAdapter.addFragment(new StationValuesFragment());
@@ -113,16 +123,6 @@ public class MainActivity extends AppCompatActivity{
             public void run() {
                 DatabaseManager.getInstance().getValues();
             }}, 600);
-    }
-
-    private void startService(){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.add(Calendar.SECOND, 1);
-        Intent intent = new Intent(this, ValueUpdaterService.class);
-        PendingIntent pintent = PendingIntent.getService(this, 0, intent, 0);
-        AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarm.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 5*60000, pintent);
     }
 
     private void startWeatherFragment(){

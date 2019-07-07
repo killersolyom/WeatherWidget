@@ -1,5 +1,6 @@
 package weather.widget.Widget;
 
+import android.app.AlarmManager;
 import android.app.Application;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -8,12 +9,8 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.Display;
-import android.widget.ImageView;
 import android.widget.RemoteViews;
 import java.util.Calendar;
 import java.util.Objects;
@@ -21,15 +18,14 @@ import weather.widget.Classes.NotificationCreater;
 import weather.widget.DataManager.DataContainer;
 import weather.widget.Main.MainActivity;
 import weather.widget.R;
+import weather.widget.Services.ValueUpdaterService;
 
 
 public class WeatherWidget extends AppWidgetProvider{
 
     static String CLICK_ACTION = "CLICKED";
-    private static Context mContext;
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        mContext = context;
         Intent intent = new Intent(context, WeatherWidget.class);
         intent.setAction(CLICK_ACTION);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,0,intent,0);
@@ -43,7 +39,6 @@ public class WeatherWidget extends AppWidgetProvider{
         views.setOnClickPendingIntent(R.id.layout_wrapper,pendingIntent);
         views.setOnClickPendingIntent(R.id.valueView,pendingIntent);
         views.setOnClickPendingIntent(R.id.widgetLogo,pendingIntent);
-
         appWidgetManager.updateAppWidget(appWidgetId, views);
         update(context);
     }
@@ -64,7 +59,6 @@ public class WeatherWidget extends AppWidgetProvider{
             Intent i = new Intent(context, MainActivity.class);
             context.startActivity(i);
         }else if (Objects.equals(intent.getAction(), "UPDATE_WIDGET")) {
-            //Log.e("Appw","Widget update\n");
             update(context);
         }
 

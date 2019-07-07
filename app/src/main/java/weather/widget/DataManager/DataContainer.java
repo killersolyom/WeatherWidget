@@ -1,10 +1,7 @@
 package weather.widget.DataManager;
 
-import android.util.Log;
-
 import com.jjoe64.graphview.series.DataPoint;
 import java.util.ArrayList;
-
 import weather.widget.Interfaces.IStationsChangeListener;
 import weather.widget.Interfaces.IUpdateListener;
 import weather.widget.Interfaces.IValuesChangeListener;

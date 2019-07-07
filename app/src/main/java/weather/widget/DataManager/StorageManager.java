@@ -11,7 +11,7 @@ import java.io.FileWriter;
 public class StorageManager {
 
     private SharedPreferences preference;
-    SharedPreferences.Editor editor;
+    private SharedPreferences.Editor editor;
 
     public StorageManager() {
         try {
